@@ -6,8 +6,16 @@
 
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+	
+	<script  type="text/javascript" src="assets/javascript/app.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+	<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+
+
 </head>
 <body>
 
@@ -53,23 +61,23 @@
 
 	 		<form>
 				 <div class="form-group">
-				   <label for="exampleInputEmail1">Train Name</label>
-				   <input type="email" class="form-control" id="name" >
+				   <label for="inputTrain">Train Name</label>
+				   <input type="text" class="form-control" id="name" >
 				 </div>
 
 				 <div class="form-group">
-				   <label for="exampleInputEmail1">Destination</label>
-				   <input type="email" class="form-control" id="role" >
+				   <label for="inputDest">Destination</label>
+				   <input type="text" class="form-control" id="dest" >
 				 </div>
 				 
 				 <div class="form-group">
-				   <label for="exampleInputPassword1">First Train Time (HH:mm - military time)</label>
-				   <input type="password" class="form-control" id="date" >
+				   <label for="inputTime">First Train Time (HH:mm - military time)</label>
+				   <input type="text" class="form-control" id="time" >
 				 </div>
 
 				 <div class="form-group">
-				   <label for="exampleInputPassword1">Frequency (mm) </label>
-				   <input type="password" class="form-control" id="rate" >
+				   <label for="inputFrequency">Frequency (mm) </label>
+				   <input type="text" class="form-control" id="frequency" >
 				 </div>
 				 
 				 
@@ -82,6 +90,49 @@
 
 
 	</div>
+
+<script>
+	$( document ).ready(function() {
+		var dataRef = new Firebase("https://train-scheduler2.firebaseio.com/");
+
+var name = "";
+var dest = "";
+var time = 0;
+var frequency = 0;
+
+	
+
+ $("#submitBtn").on("click", function(){
+
+       // Get inputs
+       name = $('#name').val().trim(); 
+       dest = $('#dest').val().trim(); 
+       time = $('#time').val().trim();
+       frequency = $('#frequency').val().trim();
+
+       // Change what is saved in firebase
+       dataRef.push({
+           name: name,
+           dest: dest, 
+           time: time, 
+           frequency: frequency
+
+           
+       });
+
+       return false;
+   })
+		
+			
+
+
+
+	</script>
+
+	}
+
+
+
 
 </body>
 </html>
