@@ -9,9 +9,14 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 	
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 	<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+
+		<!-- Moment.js Reference -->
+	<!-- <script src="http://momentjs.com/downloads/moment.js"></script> -->	
+ 	<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
 
 </head>
@@ -36,7 +41,7 @@
 		<div class="panel-body">
 
 		<!-- Table -->
- 		<table class="table">
+ 		<table class="table" id="trainTable">
  			<th> Train Name</th>
  			<th> Destination</th>
  			<th> Frequency (min) </th>
@@ -90,6 +95,7 @@
 	</div>
 
 <script>
+
 	$( document ).ready(function() {
 		var dataRef = new Firebase("https://train-scheduler2.firebaseio.com/");
 
@@ -105,7 +111,7 @@ var frequency = 0;
        // Get inputs
        name = $('#name').val().trim(); 
        dest = $('#dest').val().trim(); 
-       time = $('#time').val().trim();
+       time = moment($('#time').val().trim(), "HH:mm").format("X");
        frequency = $('#frequency').val().trim();
 
        // Change what is saved in firebase
@@ -118,26 +124,59 @@ var frequency = 0;
            
        });
 
+       // Alert
+	alert("Information successfully added");
+
+	// Clears all of the text-boxes
+	$("#name").val("");
+	$("#dest").val("");
+	$("#time").val("");
+	$("#frequency").val("");
+
        return false;
    });
 		
-dataRef.on("value", function(snapshot) {
+		var counter=0;
+dataRef.on("child_added", function(childSnapshot, prevChildkey) {
 	// Log everything that's coming out of snapshot
-	console.log(snapshot.val());
-	console.log(snapshot.val().name);
-	console.log(snapshot.val().dest);
-	console.log(snapshot.val().time);
-	console.log(snapshot.val().frequency);
-	// Change the HTML to reflect
-	$("#name").html(snapshot.val().name);
-	$("#dest").html(snapshot.val().dest);
-	$("#time").html(snapshot.val().time);
-	$("#frequency").html(snapshot.val().frequency);
+	counter++;
+	console.log(counter);
+	//console.log(snapshot);
+	console.log(childSnapshot.val());
+	console.log(childSnapshot.val().name);
+	console.log(childSnapshot.val().dest);
+	console.log(childSnapshot.val().time);
+	console.log(childSnapshot.val().frequency);
+		// Store everything into a variable.
+	var trainName = childSnapshot.val().name;
+	var Destination= childSnapshot.val().dest;
+	var trainTime = childSnapshot.val().time;
+	var Frequency = childSnapshot.val().frequency;
+
+
+// Add each train's data into the table
+	$("#trainTable").append("<tr><td>" + trainName + "</td><td>" + Destination + "</td><td>" + Frequency+ "</td><td>"  + "</td><td>"  + "</td><td>"  + "</td></tr>");
+
+	var tableRow = $("<tr>");
+	var tableData1 = $("<td>");
+	tableData1.html(trainName);
+	var tableData2 = $("<td>");
+	tableData2.html(Destination);
+	var tableData3 = $("<td>");
+	var tableData4 = $("<td>");
+	tableRow.append(tableData1);
+	tableRow.append(tableData2);
+	tableRow.append(tableData3);
+	tableRow.append(tableData4);
+	$("#employeeTable > tbody").append(tableRow);
+
+});
+
 // Handle the errors
 }, function(errorObject) {
 	console.log("Errors handled: " + errorObject.code);
 });
-});			
+			
 
 
 
