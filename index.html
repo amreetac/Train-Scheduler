@@ -109,9 +109,28 @@ var frequency = 0;
        time = moment($('#time').val().trim(), "HH:mm").format("X");
        frequency = $('#frequency').val().trim();
 
+				var firstTimeConverted = moment(time,"hh:mm").subtract(1, "years");
+	   		console.log(firstTimeConverted);
+	   		// Current Time
+	   		var currentTime = moment();
+	   		console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+	   		// Difference between the times
+	   		var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+	   		console.log("DIFFERENCE IN TIME: " + diffTime);
+	   		// Time apart (remainder)
+	   		var tRemainder = diffTime % tFrequency;
+	   		console.log(tRemainder);
+	   		// Minute Until Train
+	   		tMinutesTillTrain = frequency - tRemainder;
+	   		console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+	   		// Next Train
+	   		nextTrain = moment().add(tMinutesTillTrain, "minutes")
+				console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"))
 
 
-       
+
+
+
        // Change what is saved in firebase
        dataRef.push({
            name: name,
@@ -141,25 +160,37 @@ dataRef.on("child_added", function(childSnapshot, prevChildkey) {
 	console.log(childSnapshot.val().dest);
 	console.log(childSnapshot.val().time);
 	console.log(childSnapshot.val().frequency);
+	console.log(childSnapshot.val().tMinutesTillTrain);
+	console.log(childSnapshot.val().nextTrain);
 		// Store everything into a variable.
 	var trainName = childSnapshot.val().name;
 	var Destination= childSnapshot.val().dest;
 	var trainTime = childSnapshot.val().time;
 	var Frequency = childSnapshot.val().frequency;
+	var tMinutesTillTrain = childSnapshot.val().tMinutesTillTrain;
+	var nextTrain = childSnapshot.val().nextTrain;
+
 // Add each train's data into the table
-	$("#trainTable").append("<tr><td>" + trainName + "</td><td>" + Destination + "</td><td>" + Frequency+ "</td><td>"  + "</td><td>"  + "</td><td>"  + "</td></tr>");
-	var tableRow = $("<tr>");
+$("#trainTable").append("<tr><td>" + trainName + "</td><td>" + Destination + "</td><td>" + Frequency+
+	"</td><td>"  +tMinutesTillTrain+ "</td><td>"  +nextTrain+ "</td><td>"  + "</td></tr>");
+var tableRow = $("<tr>");
 	var tableData1 = $("<td>");
 	tableData1.html(trainName);
 	var tableData2 = $("<td>");
 	tableData2.html(Destination);
 	var tableData3 = $("<td>");
+	tableData3.html(Frequency);
 	var tableData4 = $("<td>");
+	tableData4.html(tMinutesTillTrain);
+	var tableData5 = $("<td>");
+	tableData5.html(nextTrain);
 	tableRow.append(tableData1);
 	tableRow.append(tableData2);
 	tableRow.append(tableData3);
 	tableRow.append(tableData4);
+	tableRow.append(tableData5);
 	$("#employeeTable > tbody").append(tableRow);
+
 });
 // Handle the errors
 }, function(errorObject) {
