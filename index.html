@@ -96,7 +96,7 @@
 
 <script>
 	$( document ).ready(function() {
-		var dataRef = new Firebase("https://train-scheduler2.firebaseio.com/");
+		var dataRef = new Firebase("https://train-scheduler4.firebaseio.com/");
 var name = "";
 var dest = "";
 var time = 0;
@@ -108,6 +108,10 @@ var frequency = 0;
        dest = $('#dest').val().trim(); 
        time = moment($('#time').val().trim(), "HH:mm").format("X");
        frequency = $('#frequency').val().trim();
+
+
+
+       
        // Change what is saved in firebase
        dataRef.push({
            name: name,
